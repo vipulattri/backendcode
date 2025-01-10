@@ -24,7 +24,7 @@ app.use(
   cors({
     origin: (origin, callback) => {
       const allowedOrigins = [
-        "https://vipul-attri-portfolio.netlify.app/", // Portfolio URL
+       process.env.PORTFOLIO_URL || "https://vipul-attri-portfolio.netlify.app", // Portfolio URL
         process.env.DASHBOARD_URL || "http://localhost:5173", // Dashboard URL
         "https://vipul-attri-portfolio.netlify.app/",
       ];
