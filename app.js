@@ -19,10 +19,20 @@ dotenv.config({ path: "./config/config.env" });
 // Initialize database connection
 dbConnection();
 
-// CORS configuration to allow all origins
+// CORS configuration with credentials support
 app.use(
   cors({
-    origin: "*", // Allow all origins
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        process.env.PORTFOLIO_URL || "http://localhost:5174", // Portfolio URL
+        process.env.DASHBOARD_URL || "http://localhost:5173", // Dashboard URL
+      ];
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
