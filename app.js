@@ -26,6 +26,7 @@ app.use(
       const allowedOrigins = [
         process.env.PORTFOLIO_URL || "http://localhost:5174", // Portfolio URL
         process.env.DASHBOARD_URL || "http://localhost:5173", // Dashboard URL
+        "https://vipul-attri.netlify.app/",
       ];
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
