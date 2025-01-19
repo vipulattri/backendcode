@@ -4,14 +4,14 @@ import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 import cors from "cors";
 import dbConnection from "./database/dbConnection.js";
-import { errorMiddleware } from "./middlewares/error.js"; // Assuming this is a custom middleware
+import { errorMiddleware } from "./middlewares/error.js";
 import userRouter from "./routes/userRouter.js";
 import timelineRouter from "./routes/timelineRouter.js";
 import messageRouter from "./routes/messageRouter.js";
 import skillRouter from "./routes/skillRouter.js";
 import softwareApplicationRouter from "./routes/softwareApplicationRouter.js";
 import projectRouter from "./routes/projectRouter.js";
-import ErrorHandler from "./middlewares/ErrorHander.js"; // Ensure the ErrorHandler class is imported
+import ErrorHandler from "./middlewares/ErrorHander.js";
 
 const app = express();
 dotenv.config({ path: "./config/config.env" });
@@ -22,18 +22,10 @@ dbConnection();
 // CORS configuration with credentials support
 app.use(
   cors({
-    origin: (origin, callback) => {
-      const allowedOrigins = [
-       process.env.PORTFOLIO_URL || "https://vipul-attri-portfolio.netlify.app", // Portfolio URL
-        process.env.DASHBOARD_URL || "http://localhost:5173", // Dashboard URL
-        "https://vipul-attri-portfolio.netlify.app/",
-      ];
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: [
+      process.env.PORTFOLIO_URL || "https://vipul-attri-portfolio.netlify.app",
+      process.env.DASHBOARD_URL || "http://localhost:5173",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -55,6 +47,14 @@ app.use(
     tempFileDir: "/tmp/",
   })
 );
+
+// Debugging middleware
+app.use((req, res, next) => {
+  console.log(`Request Origin: ${req.headers.origin}`);
+  console.log(`Request Method: ${req.method}`);
+  console.log(`Request Headers:`, req.headers);
+  next();
+});
 
 // Routes
 app.use("/api/v1/user", userRouter);
